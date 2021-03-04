@@ -1,0 +1,5 @@
+package com.tts.ECommerce.Model;
+
+public class Product {
+
+}

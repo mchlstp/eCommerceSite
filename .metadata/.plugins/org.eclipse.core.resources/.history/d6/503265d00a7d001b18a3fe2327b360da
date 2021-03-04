@@ -1,0 +1,46 @@
+package com.tts.ECommerce.MainController;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import antlr.collections.List;
+import lombok.Data;
+
+@Data
+@Controller
+@ControllerAdvice
+public class MainController {
+	@Autowired
+	ProductService productService;
+	
+	@GetMapping("/")
+	public String main() {
+		return "main";
+	}
+	
+	@ModelAttribute("products")
+	public List<String> categories() {
+		return productService.findDistinctCategories();
+	}
+	@ModelAttribute("brands")
+	public List<String> brands() {
+		return productService.findDistinctBrands();
+	}
+	
+	@GetMapping("/filter")
+	public String filter(@RequestParam(required = false) String category,
+						@RequestParam(required = false) String brand,
+						Model model) {
+		List<Product> filtered = 
+productService.findbyBrandAndOrCategory(brand, category);
+		model.addAttribute("products", filtered);
+
+		return "main";
+	}
+
+}
